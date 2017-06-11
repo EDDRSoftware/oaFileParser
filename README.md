@@ -27,9 +27,13 @@ You can also pull down example test files from http://www.princeton.edu/~nverma/
 Please checkout these links for more information about how the data tree structures work:
 
 https://t.co/q6yvbY6AnJ
+
 https://t.co/HnSWQhYmLo
+
 https://t.co/ix4SxIWA8b
+
 https://t.co/bybpIPVRml
+
 https://t.co/livrspVwx6
 
 
