@@ -14,7 +14,7 @@ If you or your company would like to participate in this project, please email u
 
 If you would like to ensure that this library covers a particular file or coverage of data in a file, please email us a test case file at support@eddrs.com or check it into the testData directory by following these instructions: https://help.github.com/articles/creating-a-pull-request/.  Please do not check-in any data that you don't want shared with the world.  We do not take any responsibility for design data that is part of this repository.
 
-# To Get The Test Data
+# The Test Data
 Make sure you pull down this repository using the recursive flag.
 ```sh
 git clone --recursive https://github.com/EDDRSoftware/oaFileParser
@@ -22,3 +22,14 @@ git clone --recursive https://github.com/EDDRSoftware/oaFileParser
 If you don't pull down the recursive test data, then you will need to supply your own.
 
 You can also pull down example test files from http://www.princeton.edu/~nverma/cadenceSetup_5.10.41/gpdk090_v4.4/libs.oa22/gpdk090/.
+
+# Understanding the File Format
+Please checkout these links for more information about how the data tree structures work:
+
+https://t.co/q6yvbY6AnJ
+https://t.co/HnSWQhYmLo
+https://t.co/ix4SxIWA8b
+https://t.co/bybpIPVRml
+https://t.co/livrspVwx6
+
+
