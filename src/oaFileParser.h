@@ -54,6 +54,7 @@ namespace oafp
         virtual void onParsedBuildInformation(unsigned short appDataModelRev, unsigned short kitDataModelRev, unsigned short appAPIMinorRev, unsigned short kitReleaseNum, const char *appBuildName, const char *kitBuildName, const char *platforName) = 0;
         virtual void onParsedDatabaseMapD(unsigned long ids[], unsigned int types[], unsigned long num) = 0;
         virtual void onParsedDatabaseMarker(unsigned int bitCheck) = 0;
+        virtual void onParsedError(const char *error) = 0;
 
     private:
         void read0x04(FILE *file, unsigned long pos, unsigned long tblSize);

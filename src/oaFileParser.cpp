@@ -30,16 +30,10 @@
  */
 
 #include "oaFileParser.h"
-#include <iostream>
 #include <cstring>
-#include <ctime>
-#include <iomanip>
-
 
 namespace oafp
 {
-    using namespace std;
-
     // Make sure the structs are kept to a 4 byte alignment.
     // If need be, add fields at the end to fullfill this requirement.
     struct fileHeader{
@@ -56,6 +50,13 @@ namespace oafp
         unsigned int        used;           // 4 bytes
         unsigned int        deleted;        // 4 bytes
         unsigned int        first;          // 4 bytes
+    };
+
+    struct appInfo{
+        unsigned short appDataModelRev;     // 2 bytes - short 2
+        unsigned short kitDataModelRev;     // 2 bytes - back to even
+        unsigned short appAPIMinorRev;      // 2 bytes - short 2
+        unsigned short kitReleaseNum;       // 2 bytes - back to even
     };
 
     unsigned long roundAlign8Bit(unsigned long len){
@@ -99,19 +100,10 @@ namespace oafp
         unsigned int types[numRes];
         unsigned long tblIds[numOther];
         unsigned int tblTypes[numOther];
-        for(int i=0; i<numRes; ++i){
-            in = fread(&ids[i], sizeof(ids[i]), 1, file);
-        }
-        for(int i=0; i<numRes; ++i){
-            in = fread(&types[i], sizeof(types[i]), 1, file);
-        }
-
-        for(int i=0; i<numOther; ++i){
-            in = fread(&tblIds[i], sizeof(tblIds[i]), 1, file);
-        }
-        for(int i=0; i<numOther; ++i){
-            in = fread(&tblTypes[i], sizeof(tblTypes[i]), 1, file);
-        }
+        in = fread(&ids[0], sizeof(ids[0]) * numRes, 1, file);
+        in = fread(&types[0], sizeof(types[0]) * numRes, 1, file);
+        in = fread(&tblIds[0], sizeof(tblIds[0]) * numOther, 1, file);
+        in = fread(&tblTypes[0], sizeof(tblTypes[0]) * numOther, 1, file);
         onParsedDatabaseMap(ids, types, numRes, tblIds, tblTypes, numOther);
     }
 
@@ -153,19 +145,13 @@ namespace oafp
 
     void oaFileParser::read0x1d(FILE *file, unsigned long pos, unsigned long tblSize){
         fseek(file, pos, SEEK_SET);
-        unsigned short appDataModelRev;
-        unsigned short kitDataModelRev;
-        unsigned short appAPIMinorRev;
-        unsigned short kitReleaseNum;
+        appInfo ai;
         char buffer[tblSize - (sizeof(unsigned short)*4)];
         char *appBuildName;
         char *kitBuildName;
         char *platforName;
         unsigned int in = 0;
-        in = fread(&appDataModelRev, sizeof(appDataModelRev), 1, file);
-        in = fread(&kitDataModelRev, sizeof(kitDataModelRev), 1, file);
-        in = fread(&appAPIMinorRev, sizeof(appAPIMinorRev), 1, file);
-        in = fread(&kitReleaseNum, sizeof(kitReleaseNum), 1, file);
+        in = fread(&ai, sizeof(ai), 1, file);
         in = fread(&buffer, sizeof(buffer), 1, file);
         unsigned int b = 0;
         appBuildName = &buffer[b];
@@ -173,7 +159,7 @@ namespace oafp
         kitBuildName = &buffer[b];
         b += roundAlign8Bit(strlen(kitBuildName));
         platforName = &buffer[b];
-        onParsedBuildInformation(appDataModelRev, kitDataModelRev, appAPIMinorRev, kitReleaseNum, appBuildName, kitBuildName, platforName);
+        onParsedBuildInformation(ai.appDataModelRev, ai.kitDataModelRev, ai.appAPIMinorRev, ai.kitReleaseNum, appBuildName, kitBuildName, platforName);
     }
 
     void oaFileParser::read0x1f(FILE *file, unsigned long pos, unsigned long tblSize){
@@ -183,12 +169,8 @@ namespace oafp
         in = fread(&num, sizeof(num), 1, file);
         unsigned long ids[num];
         unsigned int types[num];
-        for(int i=0; i<num; ++i){
-            in = fread(&ids[i], sizeof(ids[i]), 1, file);
-        }
-        for(int i=0; i<num; ++i){
-            in = fread(&types[i], sizeof(types[i]), 1, file);
-        }
+        in = fread(&ids[0], sizeof(ids[0]) * num, 1, file);
+        in = fread(&types[0], sizeof(types[0]) * num, 1, file);
         onParsedDatabaseMapD(ids, types, num);
     }
 
@@ -217,15 +199,9 @@ namespace oafp
             unsigned long offsets[fh.used];
             unsigned long sizes[fh.used];
             unsigned long startOffset = 0;
-            for(int i=0; i<fh.used; ++i){
-                in = fread(&ids[i], sizeof(ids[fh.used]), 1, file);
-            }
-            for(int i=0; i<fh.used; ++i){
-                in = fread(&offsets[i], sizeof(offsets[fh.used]), 1, file);
-            }
-            for(int i=0; i<fh.used; ++i){
-                in = fread(&sizes[i], sizeof(sizes[fh.used]), 1, file);
-            }
+            in = fread(&ids[0], sizeof(ids[0]) * fh.used, 1, file);
+            in = fread(&offsets[0], sizeof(offsets[0]) * fh.used, 1, file);
+            in = fread(&sizes[0], sizeof(sizes[0]) * fh.used, 1, file);
 
             onParsedTableInformation(ids, offsets, sizes, fh.used);
             for(int i=0; i<fh.used; ++i){
@@ -255,7 +231,7 @@ namespace oafp
             }
             fclose(file);
         } catch (...) {
-            cerr << "ERROR: parsing file" << endl;
+            onParsedError("Error: paring file.");
             return 1;
         }
         return 0;

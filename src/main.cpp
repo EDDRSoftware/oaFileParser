@@ -135,6 +135,9 @@ protected:
         cout << "Database EOD Marker: " << endl;
         cout << "\tMarker: " << bitCheck << endl;        
     };
+    virtual void onParsedError(const char *error){
+        cerr << error << endl;
+    };
 };
 
 
