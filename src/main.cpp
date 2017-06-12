@@ -29,6 +29,8 @@
  *
  */
 
+#include <stdlib.h>
+
 #include <cstdio>
 #include <iostream>
 #include <iomanip>
@@ -66,7 +68,7 @@ protected:
         cout << "Database Last Saved Time: " << endl;
         struct tm *timeInfo;
         timeInfo = gmtime((time_t*)&lsTime);
-        cout << "\tTime Raw:   " << lsTime << endl;
+        cout << "\tTime Raw:   0x" << lsTime << endl;
         cout << "\tGMT:        " << asctime(timeInfo);  // asctime puts the EOL for you.
         timeInfo = localtime((time_t*)&lsTime);
         cout << "\tLocal Time: " << asctime(timeInfo);
@@ -103,10 +105,19 @@ protected:
     virtual void onParsedCreateTime(unsigned long createTime){
         cout << "Database Create Time: " << endl;
         struct tm *timeInfo;
-        timeInfo = gmtime((time_t*)&createTime);
-        cout << "\tCreate Time Raw:   0x" << createTime << endl;        
+        unsigned int downTime[2];
+
+        // Something going on with time time in versions of >=22.43
+        memcpy(&downTime, &createTime, sizeof(downTime));
+        time_t tt = downTime[0];
+        if(tt==0){
+            tt = downTime[1];
+        }
+        timeInfo = gmtime((time_t*)&tt);
+        //cout << "\tCreate Time Raw:   0x" << createTime << endl;        
+        cout << "\tCreate Time Raw:   0x" << tt << endl;        
         cout << "\tCreate GMT:        "   << asctime(timeInfo);  // asctime puts the EOL for you.
-        timeInfo = localtime((time_t*)&createTime);
+        timeInfo = localtime((time_t*)&tt);
         cout << "\tCreate Local Time: "   << asctime(timeInfo);
     };
     virtual void onParsedDMandBuildName(unsigned short dataModelRev, const char *buildName){
