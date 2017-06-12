@@ -25,7 +25,7 @@
 /*
  * Changes:
  * 2017-01-01: First & Last Name: What you did.
- * 2017-06-28: Kevin Nesmith: Initial contribution.
+ * 2017-05-28: Kevin Nesmith: Initial contribution.
  *
  */
 
@@ -39,20 +39,36 @@ namespace oafp
     class oaFileParser
     {
     public:
-        int parse(const char* filePath);
+        int parse(const char *filePath);
 
     protected:
-        virtual void onParsedPreface(unsigned int testBit, unsigned short type, unsigned short schema, unsigned long offset, unsigned int size, unsigned int used) = 0;
-        virtual void onParsedTableInformation(unsigned long ids[], unsigned long offsets[], unsigned long sizes[], unsigned int num) = 0;
+        virtual void onParsedPreface(unsigned int testBit, unsigned short type,
+                                     unsigned short schema, unsigned long offset,
+                                     unsigned int size, unsigned int used) = 0;
+        virtual void onParsedTableInformation(unsigned long ids[],
+                                              unsigned long offsets[],
+                                              unsigned long sizes[], unsigned int num) = 0;
         virtual void onParsedFlags(unsigned int flags) = 0;
         virtual void onParsedTimeStamp(unsigned int timeStamp) = 0;
         virtual void onParsedLastSavedTime(unsigned long lastSavedTime) = 0;
-        virtual void onParsedDatabaseMap(unsigned long ids[], unsigned int types[], unsigned int idCount, unsigned long tblIds[], unsigned int tblTypes[], unsigned int tblCount) = 0;
-        virtual void onParsedStringTable(unsigned int size, unsigned int used, unsigned int deleted, unsigned int first, const char *buffer) = 0;
+        virtual void onParsedDatabaseMap(unsigned long ids[], unsigned int types[],
+                                         unsigned int idCount, unsigned long tblIds[],
+                                         unsigned int tblTypes[], unsigned int tblCount) = 0;
+        virtual void onParsedStringTable(unsigned int size, unsigned int used,
+                                         unsigned int deleted, unsigned int first,
+                                         const char *buffer) = 0;
         virtual void onParsedCreateTime(unsigned long createTime) = 0;
-        virtual void onParsedDMandBuildName(unsigned short dataModelRev, const char *buildName) = 0;
-        virtual void onParsedBuildInformation(unsigned short appDataModelRev, unsigned short kitDataModelRev, unsigned short appAPIMinorRev, unsigned short kitReleaseNum, const char *appBuildName, const char *kitBuildName, const char *platforName) = 0;
-        virtual void onParsedDatabaseMapD(unsigned long ids[], unsigned int types[], unsigned long num) = 0;
+        virtual void onParsedDMandBuildName(unsigned short dataModelRev,
+                                            const char *buildName) = 0;
+        virtual void onParsedBuildInformation(unsigned short appDataModelRev,
+                                              unsigned short kitDataModelRev,
+                                              unsigned short appAPIMinorRev,
+                                              unsigned short kitReleaseNum,
+                                              const char *appBuildName,
+                                              const char *kitBuildName,
+                                              const char *platforName) = 0;
+        virtual void onParsedDatabaseMapD(unsigned long ids[], unsigned int types[],
+                                          unsigned long num) = 0;
         virtual void onParsedDatabaseMarker(unsigned int bitCheck) = 0;
         virtual void onParsedError(const char *error) = 0;
 

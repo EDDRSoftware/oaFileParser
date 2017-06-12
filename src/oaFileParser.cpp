@@ -25,7 +25,7 @@
 /*
  * Changes:
  * 2017-01-01: First & Last Name: What you did.
- * 2017-06-28: Kevin Nesmith: Initial contribution.
+ * 2017-05-28: Kevin Nesmith: Initial contribution.
  *
  */
 
@@ -36,7 +36,7 @@ namespace oafp
 {
     // Make sure the structs are kept to a 4 byte alignment.
     // If need be, add fields at the end to fullfill this requirement.
-    struct fileHeader{
+    struct fileHeader {
         unsigned int        testBit;        // 4 bytes
         unsigned short      type;           // 2 bytes - short 2
         unsigned short      schema;         // 2 bytes - back to even
@@ -45,26 +45,29 @@ namespace oafp
         unsigned int        used;           // 4 bytes
     };
 
-    struct tableIndex{
+    struct tableIndex {
         unsigned int        size;           // 4 bytes
         unsigned int        used;           // 4 bytes
         unsigned int        deleted;        // 4 bytes
         unsigned int        first;          // 4 bytes
     };
 
-    struct appInfo{
+    struct appInfo {
         unsigned short appDataModelRev;     // 2 bytes - short 2
         unsigned short kitDataModelRev;     // 2 bytes - back to even
         unsigned short appAPIMinorRev;      // 2 bytes - short 2
         unsigned short kitReleaseNum;       // 2 bytes - back to even
     };
 
-    unsigned long roundAlign8Bit(unsigned long len){
+    unsigned long roundAlign8Bit(unsigned long len)
+    {
         unsigned long rem = len%8;
         return len + (8 - rem);
     }
 
-    void oaFileParser::read0x04(FILE *file, unsigned long pos, unsigned long tblSize){
+    void oaFileParser::read0x04(FILE *file, unsigned long pos,
+                                unsigned long tblSize)
+    {
         fseek(file, pos, SEEK_SET);
         unsigned int flags = 0;
         unsigned int in = 0;
@@ -72,7 +75,9 @@ namespace oafp
         onParsedFlags(flags);
     }
 
-    void oaFileParser::read0x05(FILE *file, unsigned long pos, unsigned long tblSize){
+    void oaFileParser::read0x05(FILE *file, unsigned long pos,
+                                unsigned long tblSize)
+    {
         fseek(file, pos, SEEK_SET);
         unsigned int timeStamp;
         unsigned int in = 0;
@@ -80,7 +85,9 @@ namespace oafp
         onParsedTimeStamp(timeStamp);
     }
 
-    void oaFileParser::read0x06(FILE *file, unsigned long pos, unsigned long tblSize){
+    void oaFileParser::read0x06(FILE *file, unsigned long pos,
+                                unsigned long tblSize)
+    {
         fseek(file, pos, SEEK_SET);
         unsigned long lsTime;
         unsigned int in = 0;
@@ -88,7 +95,9 @@ namespace oafp
         onParsedLastSavedTime(lsTime);
     }
 
-    void oaFileParser::read0x07(FILE *file, unsigned long pos, unsigned long tblSize){
+    void oaFileParser::read0x07(FILE *file, unsigned long pos,
+                                unsigned long tblSize)
+    {
         fseek(file, pos, SEEK_SET);
         unsigned int numRes;
         unsigned int numData;
@@ -107,7 +116,9 @@ namespace oafp
         onParsedDatabaseMap(ids, types, numRes, tblIds, tblTypes, numOther);
     }
 
-    void oaFileParser::read0x0a(FILE *file, unsigned long pos, unsigned long tblSize){
+    void oaFileParser::read0x0a(FILE *file, unsigned long pos,
+                                unsigned long tblSize)
+    {
         fseek(file, pos, SEEK_SET);
         char buffer[tblSize];
         unsigned int size;
@@ -125,7 +136,9 @@ namespace oafp
         onParsedStringTable(size, used, deleted, first, buffer);
     }
 
-    void oaFileParser::read0x19(FILE *file, unsigned long pos, unsigned long tblSize){
+    void oaFileParser::read0x19(FILE *file, unsigned long pos,
+                                unsigned long tblSize)
+    {
         fseek(file, pos, SEEK_SET);
         unsigned long createTime;
         unsigned int in = 0;
@@ -133,7 +146,9 @@ namespace oafp
         onParsedCreateTime(createTime);
     }
 
-    void oaFileParser::read0x1c(FILE *file, unsigned long pos, unsigned long tblSize){
+    void oaFileParser::read0x1c(FILE *file, unsigned long pos,
+                                unsigned long tblSize)
+    {
         fseek(file, pos, SEEK_SET);
         unsigned short dataModelRev;
         char buildName[tblSize - sizeof(dataModelRev)];
@@ -143,7 +158,9 @@ namespace oafp
         onParsedDMandBuildName(dataModelRev, buildName);
     }
 
-    void oaFileParser::read0x1d(FILE *file, unsigned long pos, unsigned long tblSize){
+    void oaFileParser::read0x1d(FILE *file, unsigned long pos,
+                                unsigned long tblSize)
+    {
         fseek(file, pos, SEEK_SET);
         appInfo ai;
         char buffer[tblSize - (sizeof(unsigned short)*4)];
@@ -159,10 +176,14 @@ namespace oafp
         kitBuildName = &buffer[b];
         b += roundAlign8Bit(strlen(kitBuildName));
         platforName = &buffer[b];
-        onParsedBuildInformation(ai.appDataModelRev, ai.kitDataModelRev, ai.appAPIMinorRev, ai.kitReleaseNum, appBuildName, kitBuildName, platforName);
+        onParsedBuildInformation(ai.appDataModelRev, ai.kitDataModelRev,
+                                 ai.appAPIMinorRev, ai.kitReleaseNum, 
+                                 appBuildName, kitBuildName, platforName);
     }
 
-    void oaFileParser::read0x1f(FILE *file, unsigned long pos, unsigned long tblSize){
+    void oaFileParser::read0x1f(FILE *file, unsigned long pos,
+                                unsigned long tblSize)
+    {
         fseek(file, pos, SEEK_SET);
         unsigned long num;
         unsigned int in = 0;
@@ -174,7 +195,9 @@ namespace oafp
         onParsedDatabaseMapD(ids, types, num);
     }
 
-    void oaFileParser::read0x28(FILE *file, unsigned long pos, unsigned long tblSize){
+    void oaFileParser::read0x28(FILE *file, unsigned long pos,
+                                unsigned long tblSize)
+    {
         fseek(file, pos, SEEK_SET);
         unsigned int bitCheck;
         unsigned int in = 0;
@@ -182,16 +205,17 @@ namespace oafp
         onParsedDatabaseMarker(bitCheck);
     }
 
-    int oaFileParser::parse(const char* filePath)
+    int oaFileParser::parse(const char *filePath)
     {
         try {
             fileHeader fh;
             FILE *file = fopen(filePath, "r");
-            if(file==NULL){
+
+            if(file==NULL) {
                 throw("File path does not exist.");
                 return 1;
             }
-        
+
             size_t in = fread(&fh, sizeof(fh), 1, file);
             onParsedPreface(fh.testBit, fh.type, fh.schema, fh.offset, fh.size, fh.used);
 
@@ -204,36 +228,56 @@ namespace oafp
             in = fread(&sizes[0], sizeof(sizes[0]) * fh.used, 1, file);
 
             onParsedTableInformation(ids, offsets, sizes, fh.used);
-            for(int i=0; i<fh.used; ++i){
-                if(ids[i]==1){
+
+            for(int i=0; i<fh.used; ++i) {
+                if(ids[i]==1) {
                     startOffset = offsets[i];
                     break;
                 }
             }
 
-            for(int i=0; i<fh.used; ++i){
-                switch((int)ids[i]){
+            for(int i=0; i<fh.used; ++i) {
+                switch((int)ids[i]) {
                     //Index Items; Offset start from startOffset
-                    case 0x04: read0x04(file, startOffset + offsets[i], sizes[i]);    break; //Flags??
-                    case 0x05: read0x05(file, startOffset + offsets[i], sizes[i]);    break; //Time stamp??
-                    case 0x06: read0x06(file, startOffset + offsets[i], sizes[i]);    break; //Last saved time
-                    case 0x07: read0x07(file, startOffset + offsets[i], sizes[i]);    break; //File mapping
-                    case 0x19: read0x19(file, startOffset + offsets[i], sizes[i]);    break; //Creation time
-                    case 0x1c: read0x1c(file, startOffset + offsets[i], sizes[i]);    break; //DM information and version numbers
-                    case 0x1d: read0x1d(file, startOffset + offsets[i], sizes[i]);    break; //Software build information
-                    case 0x28: read0x28(file, startOffset + offsets[i], sizes[i]);    break; //End of database marker??
+                    case 0x04: read0x04(file, startOffset + offsets[i], sizes[i]);
+                        break; //Flags??
 
-                               //Non-Index Items; Offset start from 0
-                    case 0x0a: read0x0a(file, offsets[i], sizes[i]);                  break; //String table
+                    case 0x05: read0x05(file, startOffset + offsets[i], sizes[i]);
+                        break; //Time stamp??
+
+                    case 0x06: read0x06(file, startOffset + offsets[i], sizes[i]);
+                        break; //Last saved time
+
+                    case 0x07: read0x07(file, startOffset + offsets[i], sizes[i]);
+                        break; //File mapping
+
+                    case 0x19: read0x19(file, startOffset + offsets[i], sizes[i]);
+                        break; //Creation time
+
+                    case 0x1c: read0x1c(file, startOffset + offsets[i], sizes[i]);
+                        break; //DM information and version numbers
+
+                    case 0x1d: read0x1d(file, startOffset + offsets[i], sizes[i]);
+                        break; //Software build information
+
+                    case 0x28: read0x28(file, startOffset + offsets[i], sizes[i]);
+                        break; //End of database marker??
+
+                    //Non-Index Items; Offset start from 0
+                    case 0x0a: read0x0a(file, offsets[i], sizes[i]);
+                        break; //String table
+
                     default:
-                               break;
+                        break;
                 }
             }
+
             fclose(file);
-        } catch (...) {
+        } catch(...) {
             onParsedError("Error: paring file.");
             return 1;
         }
+
         return 0;
     }
 } //End namespace oafp
