@@ -1,3 +1,21 @@
 [submodule "testData/Cadence_Virtuoso_Ironman"]
 	path = testData/Cadence_Virtuoso_Ironman
 	url = https://github.com/ironmaniiith/Cadence_Virtuoso_Ironman
+[submodule "testData/ece555"]
+	path = testData/ece555
+	url = https://github.com/alangenfeld/ece555
+[submodule "testData/cdsgit"]
+	path = testData/cdsgit
+	url = https://github.com/cdsgit/cdsgit
+[submodule "testData/uwave"]
+	path = testData/uwave
+	url = https://github.com/chrispandrews/uwave
+[submodule "testData/CGol"]
+	path = testData/CGol
+	url = https://github.com/vaibhavviswanathan/CGoL
+[submodule "testData/TNE089"]
+	path = testData/TNE089
+	url = https://github.com/lq2394/TNE089
+[submodule "testData/Differential-OTA"]
+	path = testData/Differential-OTA
+	url = https://github.com/breadboardist/Differential-OTA
