@@ -36,6 +36,31 @@
 
 namespace oafp
 {
+    // Make sure the structs are kept to a 4 byte alignment.
+    // If need be, add fields at the end to fullfill this requirement.
+    struct fileHeader {
+        unsigned int        testBit;        // 4 bytes
+        unsigned short      type;           // 2 bytes - short 2
+        unsigned short      schema;         // 2 bytes - back to even
+        unsigned long       offset;         // 8 bytes
+        unsigned int        size;           // 4 bytes
+        unsigned int        used;           // 4 bytes
+    };
+
+    struct tableIndex {
+        unsigned int        size;           // 4 bytes
+        unsigned int        used;           // 4 bytes
+        unsigned int        deleted;        // 4 bytes
+        unsigned int        first;          // 4 bytes
+    };
+
+    struct appInfo {
+        unsigned short appDataModelRev;     // 2 bytes - short 2
+        unsigned short kitDataModelRev;     // 2 bytes - back to even
+        unsigned short appAPIMinorRev;      // 2 bytes - short 2
+        unsigned short kitReleaseNum;       // 2 bytes - back to even
+    };
+
     class oaFileParser
     {
     public:
@@ -54,9 +79,7 @@ namespace oafp
         virtual void onParsedDatabaseMap(unsigned long ids[], unsigned int types[],
                                          unsigned int idCount, unsigned long tblIds[],
                                          unsigned int tblTypes[], unsigned int tblCount) = 0;
-        virtual void onParsedStringTable(unsigned int size, unsigned int used,
-                                         unsigned int deleted, unsigned int first,
-                                         const char *buffer) = 0;
+        virtual void onParsedStringTable(tableIndex table, const char *buffer) = 0;
         virtual void onParsedCreateTime(unsigned long createTime) = 0;
         virtual void onParsedDMandBuildName(unsigned short dataModelRev,
                                             const char *buildName) = 0;

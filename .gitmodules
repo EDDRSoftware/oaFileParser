@@ -19,3 +19,12 @@
 [submodule "testData/Differential-OTA"]
 	path = testData/Differential-OTA
 	url = https://github.com/breadboardist/Differential-OTA
+[submodule "testData/OpenRAM"]
+	path = testData/OpenRAM
+	url = https://github.com/mguthaus/OpenRAM
+[submodule "testData/zonyzhao_Cadence"]
+	path = testData/zonyzhao_Cadence
+	url = https://github.com/zonyzhao/Cadence
+[submodule "testData/PDK_GRAPHENE"]
+	path = testData/PDK_GRAPHENE
+	url = https://github.com/saul-rodriguez/PDK_GRAPHENE

@@ -34,31 +34,6 @@
 
 namespace oafp
 {
-    // Make sure the structs are kept to a 4 byte alignment.
-    // If need be, add fields at the end to fullfill this requirement.
-    struct fileHeader {
-        unsigned int        testBit;        // 4 bytes
-        unsigned short      type;           // 2 bytes - short 2
-        unsigned short      schema;         // 2 bytes - back to even
-        unsigned long       offset;         // 8 bytes
-        unsigned int        size;           // 4 bytes
-        unsigned int        used;           // 4 bytes
-    };
-
-    struct tableIndex {
-        unsigned int        size;           // 4 bytes
-        unsigned int        used;           // 4 bytes
-        unsigned int        deleted;        // 4 bytes
-        unsigned int        first;          // 4 bytes
-    };
-
-    struct appInfo {
-        unsigned short appDataModelRev;     // 2 bytes - short 2
-        unsigned short kitDataModelRev;     // 2 bytes - back to even
-        unsigned short appAPIMinorRev;      // 2 bytes - short 2
-        unsigned short kitReleaseNum;       // 2 bytes - back to even
-    };
-
     unsigned long roundAlign8Bit(unsigned long len)
     {
         unsigned long rem = len%8;
@@ -121,19 +96,13 @@ namespace oafp
     {
         fseek(file, pos, SEEK_SET);
         char buffer[tblSize];
-        unsigned int size;
-        unsigned int used;
-        unsigned int deleted;
-        unsigned int first;
+        tableIndex table;
         unsigned int empty;
         unsigned int in = 0;
-        in = fread(&size, sizeof(size), 1, file);
-        in = fread(&used, sizeof(used), 1, file);
-        in = fread(&deleted, sizeof(deleted), 1, file);
-        in = fread(&first, sizeof(first), 1, file);
+        in = fread(&table, sizeof(table), 1, file);
         in = fread(&empty, sizeof(empty), 1, file);
         in = fread(&buffer, sizeof(buffer), 1, file);
-        onParsedStringTable(size, used, deleted, first, buffer);
+        onParsedStringTable(table, buffer);
     }
 
     void oaFileParser::read0x19(FILE *file, unsigned long pos,
@@ -177,7 +146,7 @@ namespace oafp
         b += roundAlign8Bit(strlen(kitBuildName));
         platforName = &buffer[b];
         onParsedBuildInformation(ai.appDataModelRev, ai.kitDataModelRev,
-                                 ai.appAPIMinorRev, ai.kitReleaseNum, 
+                                 ai.appAPIMinorRev, ai.kitReleaseNum,
                                  appBuildName, kitBuildName, platforName);
     }
 

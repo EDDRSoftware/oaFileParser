@@ -50,3 +50,11 @@ build:
 	cp $(CXX_HEADERS) ../include/
 	$(CXX) -o $(TARGET_TEST) main.cpp -I. ../lib/liboaFileParser.a
 
+test:
+	./testParser ../testData/Cadence_Virtuoso_Ironman/layout/layout/layout.oa
+
+test2:
+	./testParser ../testData/zonyzhao_Cadence/ATSim/nand9_1x/schematic/sch.oa
+
+test3:
+	./testParser ../testData/zonyzhao_Cadence/16nm/Mux_128to32_noEnable/data.dm

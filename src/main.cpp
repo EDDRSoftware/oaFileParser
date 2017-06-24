@@ -55,8 +55,8 @@ protected:
         cout << "\tused:    " << dec << used    << endl;
     };
     virtual void onParsedTableInformation(unsigned long ids[],
-                                          unsigned long offsets[], 
-                                          unsigned long sizes[], 
+                                          unsigned long offsets[],
+                                          unsigned long sizes[],
                                           unsigned int num) {
         cout << "Table Information: " << endl;
 
@@ -83,7 +83,7 @@ protected:
         cout << "\tLocal Time: " << asctime(timeInfo);
     };
     virtual void onParsedDatabaseMap(unsigned long ids[], unsigned int types[],
-                                     unsigned int idCount, unsigned long tblIds[], 
+                                     unsigned int idCount, unsigned long tblIds[],
                                      unsigned int tblTypes[], unsigned int tblCount) {
         cout << "Database Map" << endl;
         cout << "\tNumber of ids: " << idCount << endl;
@@ -100,19 +100,17 @@ protected:
                  "\ttable types: 0x" << setfill('0') << setw(8) << hex << tblTypes[i] << endl;
         }
     };
-    virtual void onParsedStringTable(unsigned int size, unsigned int used,
-                                     unsigned int deleted, unsigned int first, 
-                                     const char *buffer) {
+    virtual void onParsedStringTable(oafp::tableIndex table, const char *buffer) {
         cout << "Database String Table: " << endl;
-        cout << "\tSize:    " << size    << endl;
-        cout << "\tUsed:    " << used    << endl;
-        cout << "\tDeleted: " << deleted << endl;
-        cout << "\tFirst:   " << first   << endl;
+        cout << "\tSize:    " << table.size    << endl;
+        cout << "\tUsed:    " << table.used    << endl;
+        cout << "\tDeleted: " << table.deleted << endl;
+        cout << "\tFirst:   " << table.first   << endl;
         unsigned int b = 0;
         unsigned int l = 0;
         cout << "\tStrings: ";
 
-        while(b<used) {
+        while(b<table.used) {
             const char *ptr = &buffer[b];
             l = strlen(ptr);
             cout << ptr << "|";
